@@ -1,0 +1,8 @@
+{
+    "fileLogging": false, 
+    "verboseLogging": true,
+    "http": {
+        "adminToken": "1234",
+        "port": 8080
+    }
+}
