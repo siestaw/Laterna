@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mizuw/laterna/server/cmd/internal/config"
-	"github.com/mizuw/laterna/server/cmd/internal/logger"
+	"github.com/siestaw/laterna/server/cmd/internal/config"
+	"github.com/siestaw/laterna/server/cmd/internal/logger"
 )
 
 func StartHTTPServer() {
@@ -18,7 +18,7 @@ func StartHTTPServer() {
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
 
-func createToken(w http.ResponseWriter, r *http.Request) {
+func createToken(w http.ResponseWriter, r *http.Request) { // temporary, only for testing
 	authHeader := r.Header.Get("Authorization")
 	adminToken := config.AppConfig.HTTP.AdminToken
 

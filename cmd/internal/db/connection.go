@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/mizuw/laterna/server/cmd/internal/logger"
+	"github.com/siestaw/laterna/server/cmd/internal/logger"
 )
 
 func ConnectDB() {

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/mizuw/laterna/server/cmd/internal/config"
-	"github.com/mizuw/laterna/server/cmd/internal/db"
-	"github.com/mizuw/laterna/server/cmd/internal/http"
-	"github.com/mizuw/laterna/server/cmd/internal/logger"
+	"github.com/siestaw/laterna/server/cmd/internal/config"
+	"github.com/siestaw/laterna/server/cmd/internal/db"
+	"github.com/siestaw/laterna/server/cmd/internal/http"
+	"github.com/siestaw/laterna/server/cmd/internal/logger"
 )
 
 func main() {
