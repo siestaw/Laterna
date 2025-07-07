@@ -1,12 +1,14 @@
-BINARY_NAME=lucerna
+BINARY_NAME=laterna
 
 build:
-	go build -o ${BINARY_NAME} ./cmd/server
+	mkdir -p build
+	cp config.json build
+	go build -o ./build/${BINARY_NAME} ./cmd/server
 
 run:
 	go run ./cmd/server/
 
 clean:
-	rm -f ${BINARY_NAME}
+	rm -rf build/
 	rm -rf logs/
 	go mod tidy	
