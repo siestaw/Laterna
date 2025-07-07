@@ -1,4 +1,4 @@
-package globals
+package logger
 
 import (
 	"fmt"
@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"github.com/mizuw/laterna/server/cmd/internal/config"
 )
 
 var (
@@ -17,7 +19,7 @@ var (
 func InitLoggers() {
 	var logOutput io.Writer = os.Stdout
 
-	if AppConfig.FileLogging {
+	if config.AppConfig.FileLogging {
 
 		os.Mkdir("logs", os.ModePerm)
 
@@ -33,7 +35,7 @@ func InitLoggers() {
 		log.SetOutput(logOutput)
 	}
 
-	if AppConfig.VerboseLogging {
+	if config.AppConfig.VerboseLogging {
 		flags = log.Ldate | log.Ltime | log.Lshortfile
 	}
 

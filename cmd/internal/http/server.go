@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mizuw/laterna/server/globals"
+	"github.com/mizuw/laterna/server/cmd/internal/config"
+	"github.com/mizuw/laterna/server/cmd/internal/logger"
 )
 
 func StartHTTPServer() {
@@ -12,14 +13,14 @@ func StartHTTPServer() {
 
 	router.HandleFunc("GET /api/v1/admin/token/new", createToken)
 
-	port := globals.AppConfig.HTTP.Port
-	globals.HTTPLogger.Printf("HTTP Server running on :%v", port)
+	port := config.AppConfig.HTTP.Port
+	logger.HTTPLogger.Printf("HTTP Server running on :%v", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
 
 func createToken(w http.ResponseWriter, r *http.Request) {
 	authHeader := r.Header.Get("Authorization")
-	adminToken := globals.AppConfig.HTTP.AdminToken
+	adminToken := config.AppConfig.HTTP.AdminToken
 
 	if authHeader == "" {
 		http.Error(w, "Authorization header missing", http.StatusUnauthorized)
