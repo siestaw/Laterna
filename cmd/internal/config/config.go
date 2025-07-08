@@ -4,27 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+
+	"github.com/siestaw/laterna/server/cmd/internal/models"
 )
 
-type HTTPConfig struct {
-	AdminToken string `json:"adminToken"`
-	Port       int    `json:"port"`
-}
-
-type Config struct {
-	HTTP           HTTPConfig `json:"http"`
-	FileLogging    bool       `json:"fileLogging"`
-	VerboseLogging bool       `json:"verboseLogging"`
-}
-
-func LoadConfig(path string) *Config {
+func LoadConfig(path string) *models.Config {
 	file, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Println("An error occured while reading the config file:", err)
 		os.Exit(1)
 	}
 
-	var cfg Config
+	var cfg models.Config
 	err = json.Unmarshal(file, &cfg)
 	if err != nil {
 		fmt.Println("An error occured while parsing the config file:", err)
@@ -34,4 +25,4 @@ func LoadConfig(path string) *Config {
 	return &cfg
 }
 
-var AppConfig *Config
+var AppConfig *models.Config
