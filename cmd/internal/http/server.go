@@ -28,6 +28,7 @@ func getCurrent(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.IDtoInt(idStr)
 	if err != nil {
 		utils.HTTPErrorHandling(w, r, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	state, err := db.ViewColor(id)
@@ -57,8 +58,16 @@ func setCurrent(w http.ResponseWriter, r *http.Request) {
 
 	err = db.SetColor(id, req.Color)
 	if err != nil {
-		logger.HTTPLogger.Printf("Could not update lamp: %s", err)
-		utils.HTTPErrorHandling(w, r, http.StatusInternalServerError, "Could not update lamp")
+		logger.HTTPLogger.Printf("Could not update lamp %d: %s", id, err)
+		utils.HTTPErrorHandling(w, r, http.StatusInternalServerError, err.Error())
+		return
 	}
-	http.Redirect(w, r, fmt.Sprintf("/api/v1/id/%d", id), http.StatusSeeOther)
+
+	updatedState, err := db.ViewColor(id)
+	if err != nil {
+		utils.HTTPErrorHandling(w, r, http.StatusInternalServerError, "Failed to fetch lamp state")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(updatedState)
 }
