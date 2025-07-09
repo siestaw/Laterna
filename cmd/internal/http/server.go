@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/siestaw/laterna/server/cmd/internal/config"
 	"github.com/siestaw/laterna/server/cmd/internal/db"
 	"github.com/siestaw/laterna/server/cmd/internal/logger"
+	"github.com/siestaw/laterna/server/cmd/internal/models"
 	"github.com/siestaw/laterna/server/cmd/utils"
 )
 
@@ -16,7 +16,7 @@ func StartHTTPServer() {
 	router := http.NewServeMux()
 
 	router.HandleFunc("GET /api/v1/id/{ID}", getCurrent)
-	router.HandleFunc("POST /api/v1/id/{ID}", setCurrent)
+	router.HandleFunc("PUT /api/v1/id/{ID}", setCurrent)
 
 	port := config.AppConfig.HTTP.Port
 	logger.HTTPLogger.Printf("HTTP Server running on :%v", port)
@@ -25,10 +25,9 @@ func StartHTTPServer() {
 
 func getCurrent(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("ID")
-	id, err := strconv.Atoi(idStr)
+	id, err := utils.IDtoInt(idStr)
 	if err != nil {
-		utils.HTTPErrorHandling(w, r, http.StatusBadRequest, "Invalid ID")
-		return
+		utils.HTTPErrorHandling(w, r, http.StatusBadRequest, err.Error())
 	}
 
 	state, err := db.ViewColor(id)
@@ -42,5 +41,24 @@ func getCurrent(w http.ResponseWriter, r *http.Request) {
 }
 
 func setCurrent(w http.ResponseWriter, r *http.Request) {
+	idStr := r.PathValue("ID")
+	id, err := utils.IDtoInt(idStr)
+	if err != nil {
+		utils.HTTPErrorHandling(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
 
+	var req models.LampUpdateRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		logger.HTTPLogger.Print(err)
+		utils.HTTPErrorHandling(w, r, http.StatusBadRequest, "Invalid JSON")
+		return
+	}
+
+	err = db.SetColor(id, req.Color)
+	if err != nil {
+		logger.HTTPLogger.Printf("Could not update lamp: %s", err)
+		utils.HTTPErrorHandling(w, r, http.StatusInternalServerError, "Could not update lamp")
+	}
+	http.Redirect(w, r, fmt.Sprintf("/api/v1/id/%d", id), http.StatusSeeOther)
 }

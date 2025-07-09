@@ -17,3 +17,23 @@ func ViewColor(id int) (*models.LampState, error) {
 
 	return &state, nil
 }
+
+func SetColor(id int, color string) error {
+	currentColor, err := ViewColor(id)
+	if err != nil {
+		return err
+	}
+	if currentColor.Color == color {
+		logger.DBLogger.Printf("Lamp %d already has color %s - skipping update", id, color)
+		return nil
+	}
+
+	_, err = DB.Exec("UPDATE lamp_state SET color = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", color, id)
+	if err != nil {
+		logger.DBLogger.Printf("Failed to update lamp %d: %v", id, err)
+		return err
+	}
+
+	logger.DBLogger.Printf("Lamp %d color updated to %s", id, color)
+	return nil
+}

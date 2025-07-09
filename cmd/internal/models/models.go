@@ -26,3 +26,7 @@ type LampState struct {
 	Color     string    `json:"color"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type LampUpdateRequest struct {
+	Color string `json:"color"`
+}
