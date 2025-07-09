@@ -1,8 +1,11 @@
 package db
 
 import (
+	"errors"
+
 	"github.com/siestaw/laterna/server/cmd/internal/logger"
 	"github.com/siestaw/laterna/server/cmd/internal/models"
+	"github.com/siestaw/laterna/server/cmd/utils"
 )
 
 func ViewColor(id int) (*models.LampState, error) {
@@ -19,6 +22,9 @@ func ViewColor(id int) (*models.LampState, error) {
 }
 
 func SetColor(id int, color string) error {
+	if !utils.IsValidHexColor(color) {
+		return errors.New("invalid HEX Code: %s")
+	}
 	currentColor, err := ViewColor(id)
 	if err != nil {
 		return err

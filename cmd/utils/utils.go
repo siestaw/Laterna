@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -19,6 +20,11 @@ func IDtoInt(id string) (int, error) {
 		return 0, errors.New("ID must not be negative")
 	}
 	return idInt, nil
+}
+func IsValidHexColor(color string) bool {
+	pattern := `^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
+	match, _ := regexp.MatchString(pattern, color)
+	return match
 }
 
 func HTTPErrorHandling(w http.ResponseWriter, r *http.Request, status int, message string) {
