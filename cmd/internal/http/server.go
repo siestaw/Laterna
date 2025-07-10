@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/siestaw/laterna/server/cmd/internal/config"
 	"github.com/siestaw/laterna/server/cmd/internal/db"
@@ -39,6 +40,7 @@ func getCurrent(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(state)
+	defer r.Body.Close()
 }
 
 func setCurrent(w http.ResponseWriter, r *http.Request) {
@@ -46,6 +48,16 @@ func setCurrent(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.IDtoInt(idStr)
 	if err != nil {
 		utils.HTTPErrorHandling(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+	currentState, err := db.ViewColor(id)
+	if err != nil {
+		utils.HTTPErrorHandling(w, r, http.StatusInternalServerError, "Failed to get current lamp color")
+		return
+	}
+
+	if time.Since(currentState.UpdatedAt).Seconds() < config.AppConfig.HTTP.Cooldown {
+		utils.HTTPErrorHandling(w, r, http.StatusTooManyRequests, "Slow down!")
 		return
 	}
 
@@ -63,11 +75,11 @@ func setCurrent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updatedState, err := db.ViewColor(id)
-	if err != nil {
-		utils.HTTPErrorHandling(w, r, http.StatusInternalServerError, "Failed to fetch lamp state")
-		return
-	}
+	updatedState := currentState
+	updatedState.Color = req.Color
+	updatedState.UpdatedAt = time.Now()
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(updatedState)
+	defer r.Body.Close()
 }

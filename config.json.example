@@ -3,6 +3,7 @@
     "verboseLogging": true,
     "http": {
         "adminToken": "",
-        "port": 8080
+        "port": 8080,
+        "cooldown": 5,
     }
 }

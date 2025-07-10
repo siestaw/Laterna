@@ -3,8 +3,9 @@ package models
 import "time"
 
 type HTTPConfig struct {
-	AdminToken string `json:"adminToken"`
-	Port       int    `json:"port"`
+	AdminToken string  `json:"adminToken"`
+	Port       int     `json:"port"`
+	Cooldown   float64 `json:"cooldown"`
 }
 
 type Config struct {
