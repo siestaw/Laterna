@@ -15,9 +15,18 @@ import (
 
 func StartHTTPServer() {
 	router := http.NewServeMux()
-
 	router.HandleFunc("GET /api/v1/id/{ID}", getCurrent)
 	router.HandleFunc("PUT /api/v1/id/{ID}", setCurrent)
+
+	if !db.ControllerExists(0) {
+		adminToken := db.CreateAdmin()
+		fmt.Println("IMPORTANT")
+		fmt.Println("- - - - - - - - - - - - - - - - - - ")
+		fmt.Println("ADMIN TOKEN:")
+		fmt.Printf("%s\n", adminToken)
+		fmt.Println("REGENERATE THE TOKEN BY RUNNING WITH -resetAdminToken")
+		fmt.Println("- - - - - - - - - - - - - - - - - - ")
+	}
 
 	port := config.AppConfig.HTTP.Port
 	logger.HTTPLogger.Printf("HTTP Server running on :%v", port)

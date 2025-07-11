@@ -11,6 +11,6 @@ func main() {
 	config.AppConfig = config.LoadConfig("config.json")
 	logger.InitLoggers()
 
-	go db.ConnectDB()
+	db.ConnectDB()
 	http.StartHTTPServer()
 }

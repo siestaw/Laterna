@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -9,6 +11,7 @@ import (
 	"time"
 
 	"github.com/siestaw/laterna/server/cmd/internal/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func IDtoInt(id string) (int, error) {
@@ -21,10 +24,29 @@ func IDtoInt(id string) (int, error) {
 	}
 	return idInt, nil
 }
+
 func IsValidHexColor(color string) bool {
 	pattern := `^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
 	match, _ := regexp.MatchString(pattern, color)
 	return match
+}
+
+func GenerateToken() (string, error) {
+	bytes := make([]byte, 32)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
+}
+
+func HashToken(token string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(token), bcrypt.DefaultCost)
+	return string(hash), err
+}
+
+func ValidateToken(providedToken string, storedHash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(providedToken))
+	return err == nil
 }
 
 func HTTPErrorHandling(w http.ResponseWriter, r *http.Request, status int, message string) {
