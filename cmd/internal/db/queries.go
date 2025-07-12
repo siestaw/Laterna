@@ -6,6 +6,7 @@ import (
 	"github.com/siestaw/laterna/server/cmd/internal/logger"
 	"github.com/siestaw/laterna/server/cmd/internal/models"
 	"github.com/siestaw/laterna/server/cmd/utils"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateController(target int) (string, int, error) {
@@ -48,6 +49,19 @@ func ResetAdmin() {
 	if err != nil {
 		logger.DBLogger.Printf("An error occured while resetting the admin account: %s", err)
 	}
+}
+
+func IsAdmin(token string) bool {
+	stmt := DB.QueryRow("SELECT token_hash FROM controllers WHERE id = 0")
+
+	var hashToken string
+	err := stmt.Scan(&hashToken)
+	if err != nil {
+		logger.DBLogger.Printf("Error retrieving admin hash: %v", err)
+		return false
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(hashToken), []byte(token))
+	return err == nil
 }
 
 func ControllerExists(id int) bool {
