@@ -24,17 +24,17 @@ func ConnectDB() {
 	flag.Parse()
 
 	if *resetAdmin {
-		ResetAdmin()
+		DeleteController(0)
 	}
 }
 
 func InitDB() {
-	// Legacy purposes, DELETE
 	_, err := DB.Exec(` 
-		CREATE TABLE IF NOT EXISTS lamp_state (
+		CREATE TABLE IF NOT EXISTS controllers (
 		id TEXT PRIMARY KEY,
-		color TEXT NOT NULL,
-		updated_at DATETIME NOT NULL
+		token_hash TEXT,
+		color TEXT,
+		updated_at DATETIME
 		);
 	`)
 
@@ -42,23 +42,4 @@ func InitDB() {
 		logger.DBLogger.Fatalf("An error occured while initializing the database: %v", err)
 	}
 
-	_, err = DB.Exec(`
-	CREATE TABLE IF NOT EXISTS controllers (
-		id INTEGER PRIMARY KEY,
-		token_hash TEXT NOT NULL,
-		color TEXT,
-		updated_at DATETIME
-	);`)
-	if err != nil {
-		logger.DBLogger.Fatalf("An error occured while initializing the database: %v", err)
-	}
-
-	_, err = DB.Exec(`
-	CREATE TABLE IF NOT EXISTS permissions (
-		controller_id INTEGER,
-		target_id INTEGER
-	);`)
-	if err != nil {
-		logger.DBLogger.Fatalf("An error occured while initializing the database: %v", err)
-	}
 }

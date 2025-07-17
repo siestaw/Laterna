@@ -1,9 +1,8 @@
 {
     "fileLogging": false, 
-    "verboseLogging": true,
+    "verboseLogging": true, // // not fully implemented yet
     "http": {
-        "adminToken": "",
         "port": 8080,
-        "cooldown": 5,
+        "cooldown": 5
     }
 }

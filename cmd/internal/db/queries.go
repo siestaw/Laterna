@@ -9,46 +9,25 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CreateController(target int) (string, int, error) {
+func CreateController(id int) string {
 	token, _ := utils.GenerateToken()
 	hash, _ := utils.HashToken(token)
 
-	var maxID int
-	stmt := DB.QueryRow("SELECT COALESCE(MAX(id), 0) FROM controllers")
-	stmt.Scan(&maxID)
-	id := maxID + 1
-
-	_, err := DB.Exec("INSERT INTO controllers VALUES (?, ?, '#FFFFFF', CURRENT_TIMESTAMP)", id, hash)
+	_, err := DB.Exec("INSERT INTO controllers (id, token_hash) VALUES (?, ?)", id, hash)
 	if err != nil {
-		logger.DBLogger.Printf("Failed to create a new controller: %v", err)
-		return "", id, err
-	}
-
-	_, err = DB.Exec("INSERT INTO permissions VALUES (?, ?) ", id, target)
-	if err != nil {
-		logger.DBLogger.Printf("Failed to set permissions for %d: %v", id, err)
-		return token, id, err
-	}
-	return token, id, nil
-}
-
-func CreateAdmin() string {
-	token, _ := utils.GenerateToken()
-	hash, _ := utils.HashToken(token)
-
-	_, err := DB.Exec("INSERT INTO controllers (id, token_hash) VALUES (0, ?)", hash)
-	if err != nil {
-		logger.DBLogger.Fatalf("Error creating admin user: %s", err)
+		logger.DBLogger.Fatalf("Error creating controller with ID %v: %s",id, err)
 	}
 
 	return token
 }
 
-func ResetAdmin() {
-	_, err := DB.Exec("DELETE FROM controllers WHERE id = 0")
+func DeleteController(id int) error {
+	_, err := DB.Exec("DELETE FROM controllers WHERE id = ?", id)
 	if err != nil {
-		logger.DBLogger.Printf("An error occured while resetting the admin account: %s", err)
+		logger.DBLogger.Printf("An error occured while deleting the controller %v: %s", id, err)
+		return err
 	}
+	return nil
 }
 
 func IsAdmin(token string) bool {
@@ -76,7 +55,7 @@ func ControllerExists(id int) bool {
 }
 
 func ViewColor(id int) (*models.LampState, error) {
-	row := DB.QueryRow("SELECT * FROM lamp_state WHERE id = ?", id)
+	row := DB.QueryRow("SELECT id, color, updated_at FROM controllers WHERE id = ?", id)
 
 	var state models.LampState
 	err := row.Scan(&state.ID, &state.Color, &state.UpdatedAt)
@@ -101,7 +80,7 @@ func SetColor(id int, color string) error {
 		return nil
 	}
 
-	_, err = DB.Exec("UPDATE lamp_state SET color = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", color, id)
+	_, err = DB.Exec("UPDATE controllers SET color = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?", color, id)
 	if err != nil {
 		logger.DBLogger.Printf("Failed to update lamp %d: %v", id, err)
 		return err

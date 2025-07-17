@@ -12,12 +12,22 @@ import (
 	"github.com/siestaw/laterna/server/cmd/utils"
 )
 
-func RegisterUserRoutes(mux *http.ServeMux) {
+func RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/id/{ID}", getCurrent)
 	mux.HandleFunc("PUT /api/v1/id/{ID}", setCurrent)
+
+	mux.HandleFunc("GET /api/v1/controllers", getControllers)
+	mux.HandleFunc("PUT /api/v1/controllers", setControllers)
+	mux.HandleFunc("DELETE /api/v1/controllers/{id}", deleteController)
 }
 
 func getCurrent(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
+	if !db.IsAdmin(token) {
+		utils.HTTPErrorHandling(w, r, http.StatusUnauthorized, "Invalid token")
+		return
+	}
+
 	idStr := r.PathValue("ID")
 	id, err := utils.IDtoInt(idStr)
 	if err != nil {
@@ -37,6 +47,12 @@ func getCurrent(w http.ResponseWriter, r *http.Request) {
 }
 
 func setCurrent(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("Authorization")
+	if !db.IsAdmin(token) {
+		utils.HTTPErrorHandling(w, r, http.StatusUnauthorized, "Invalid token")
+		return
+	}
+
 	idStr := r.PathValue("ID")
 	id, err := utils.IDtoInt(idStr)
 	if err != nil {
@@ -75,4 +91,16 @@ func setCurrent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(updatedState)
 	defer r.Body.Close()
+}
+
+func getControllers(w http.ResponseWriter, r *http.Request) {
+	return 
+}
+
+func setControllers(w http.ResponseWriter, r *http.Request) {
+	return
+}
+
+func deleteController(w http.ResponseWriter, r *http.Request) {
+	return
 }

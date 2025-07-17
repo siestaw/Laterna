@@ -19,8 +19,8 @@ func IDtoInt(id string) (int, error) {
 	if err != nil {
 		return 0, errors.New("invalid ID format")
 	}
-	if idInt < 0 {
-		return 0, errors.New("ID must not be negative")
+	if idInt <= 0 {
+		return 0, errors.New("invalid ID")
 	}
 	return idInt, nil
 }
@@ -30,6 +30,7 @@ func IsValidHexColor(color string) bool {
 	match, _ := regexp.MatchString(pattern, color)
 	return match
 }
+
 
 func GenerateToken() (string, error) {
 	bytes := make([]byte, 32)

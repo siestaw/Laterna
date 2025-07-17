@@ -8,6 +8,7 @@ type HTTPConfig struct {
 	Cooldown   float64 `json:"cooldown"`
 }
 
+
 type Config struct {
 	HTTP           HTTPConfig `json:"http"`
 	FileLogging    bool       `json:"fileLogging"`
