@@ -31,7 +31,7 @@ func ConnectDB() {
 func InitDB() {
 	_, err := DB.Exec(` 
 		CREATE TABLE IF NOT EXISTS controllers (
-		id TEXT PRIMARY KEY,
+		id INTEGER PRIMARY KEY,
 		token_hash TEXT,
 		color TEXT,
 		updated_at DATETIME

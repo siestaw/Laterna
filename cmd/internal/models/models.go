@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type HTTPConfig struct {
 	AdminToken string  `json:"adminToken"`
@@ -15,10 +17,10 @@ type Config struct {
 	VerboseLogging bool       `json:"verboseLogging"`
 }
 
-type HTTPError struct {
+type HTTPResponse struct {
 	Timestamp string `json:"timestamp"`
 	Status    int    `json:"status"`
-	Error     string `json:"error"`
+	Text      string `json:"text"`
 	Message   string `json:"message"`
 	Path      string `json:"path"`
 }
@@ -31,4 +33,8 @@ type LampState struct {
 
 type LampUpdateRequest struct {
 	Color string `json:"color"`
+}
+
+type ControllerRequests struct {
+	ID int `json:"ID"`
 }

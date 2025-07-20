@@ -1,4 +1,4 @@
-# Laterna
+# 🛋️ Laterna (Server)
 
 ## 🛜 API Documentation
 
@@ -40,26 +40,26 @@ Authorization: <token>
 #### Create a new controller
 ```bash
 $ curl -X POST http://your-server.com/api/v1/controllers \
-     -H "Authorization: $TOKEN"
+       -H "Authorization: $TOKEN"
 ```
-Respons with the newly assigned ID
+ℹ️ Response with the newly assigned ID. The ID will always be the next available one
 
 #### Delete an controller
 ```bash
 $ curl -X DELETE localhost:8080/api/v1/controllers \
-     -H "Authorization: $TOKEN" \
-     -d '{"ID": 1}'
+       -H "Authorization: $TOKEN" \
+       -d '{"ID": 1}'
 ```
 
 
 #### Get the current color of an controller
 ```bash
 $ curl -X GET localhost:8080/api/v1/colors/1 \
-     -H "Authorization: $TOKEN"
+       -H "Authorization: $TOKEN"
 ```
 #### Set the color of an controller
 ```bash
 $ curl -X PUT localhost:8080/api/v1/colors/1 \ 
-     -H "Authorization:$TOKEN" \
-     -d '{"Color": "#C2C342"}'    
+       -H "Authorization:$TOKEN" \
+       -d '{"Color": "#C2C342"}'    
 ```

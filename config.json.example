@@ -1,6 +1,6 @@
 {
     "fileLogging": false, 
-    "verboseLogging": true, // // not fully implemented yet
+    "verboseLogging": true,
     "http": {
         "port": 8080,
         "cooldown": 5

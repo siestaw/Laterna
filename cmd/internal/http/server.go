@@ -12,10 +12,11 @@ import (
 
 func StartHTTPServer() {
 	router := http.NewServeMux()
-	routes.RegisterRoutes(router)
+	routes.RegisterColorRoutes(router)
+	routes.RegisterControllerRoutes(router)
 
 	if !db.ControllerExists(0) {
-		adminToken := db.CreateController(0)
+		adminToken := db.CreateAdmin()
 		fmt.Println("IMPORTANT")
 		fmt.Println("- - - - - - - - - - - - - - - - - - ")
 		fmt.Println("ADMIN TOKEN:")

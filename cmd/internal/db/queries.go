@@ -9,15 +9,31 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CreateController(id int) string {
-	token, _ := utils.GenerateToken()
-	hash, _ := utils.HashToken(token)
-
-	_, err := DB.Exec("INSERT INTO controllers (id, token_hash) VALUES (?, ?)", id, hash)
+func CreateController() (int64, error) {
+	result, err := DB.Exec("INSERT INTO controllers (color, updated_at) VALUES (?, CURRENT_TIMESTAMP)", "#FFFFF")
 	if err != nil {
-		logger.DBLogger.Fatalf("Error creating controller with ID %v: %s",id, err)
+		logger.DBLogger.Printf("Error creating controller: %v", err)
+		return 0, err
 	}
+	
+	id, err := result.LastInsertId()
+	if err != nil {
+		logger.DBLogger.Printf("Error fetching controller ID: %v", err)
+		return 0, err
+	}
+	return id, nil
+}
 
+func CreateAdmin() string {
+	token, err := utils.GenerateToken()
+	if err != nil {
+		logger.DBLogger.Fatalf("Error generating admin token: %v", err)
+	}
+	token_hash, err := utils.HashToken(token)
+	if err != nil {
+		logger.DBLogger.Fatalf("Error hashing admin token: %v", err)
+	}
+	DB.Exec("INSERT INTO controllers (id, token_hash) VALUES (0, ?)", token_hash)
 	return token
 }
 

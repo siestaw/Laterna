@@ -31,7 +31,6 @@ func IsValidHexColor(color string) bool {
 	return match
 }
 
-
 func GenerateToken() (string, error) {
 	bytes := make([]byte, 32)
 	if _, err := rand.Read(bytes); err != nil {
@@ -50,12 +49,12 @@ func ValidateToken(providedToken string, storedHash string) bool {
 	return err == nil
 }
 
-func HTTPErrorHandling(w http.ResponseWriter, r *http.Request, status int, message string) {
+func HTTPResponseHandler(w http.ResponseWriter, r *http.Request, status int, message string) {
 	timestamp := time.Now().Format("2006-01-02_15-04-05")
-	errResp := models.HTTPError{
+	errResp := models.HTTPResponse{
 		Timestamp: timestamp,
 		Status:    status,
-		Error:     http.StatusText(status),
+		Text:      http.StatusText(status),
 		Message:   message,
 		Path:      r.URL.Path,
 	}
