@@ -1,6 +1,6 @@
 # Laterna
 
-## API Documentation
+## 🛜 API Documentation
 
 ### Base URL
 `http://your-server.com/api/v1`
@@ -21,8 +21,8 @@ Authorization: <token>
 #### Controller
 | Method  | Route                      | Description                            | Request Body                     |
 |---------|----------------------------|----------------------------------------|----------------------------------|
-| GET     | `/colors/{id}`             | Get the current color of an controller | —                                |
-| PUT     | `/colors/{id}`             | Set the color of an controller         |`{ "ID": "1" }`        |
+| POST    | `/controllers`             | Create a new controller                | —                                |
+| DELETE  | `/controllers`             | Delete an existing controller          |`{ "ID": 1 }`                     |
 
 ---
 
@@ -42,6 +42,7 @@ Authorization: <token>
 $ curl -X POST http://your-server.com/api/v1/controllers \
      -H "Authorization: $TOKEN"
 ```
+Respons with the newly assigned ID
 
 #### Delete an controller
 ```bash
