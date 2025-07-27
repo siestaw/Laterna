@@ -11,8 +11,8 @@ func WithAdminAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("Authorization")
 		if !db.IsAdmin(token) {
-			utils.HTTPResponseHandler(w, r, http.StatusUnauthorized, "Invalid token")
-			return 
+			utils.ErrorResponse(w, http.StatusUnauthorized, "Invalid token")
+			return
 		}
 		handlerFunc(w, r)
 	}

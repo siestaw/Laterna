@@ -49,16 +49,25 @@ func ValidateToken(providedToken string, storedHash string) bool {
 	return err == nil
 }
 
-func HTTPResponseHandler(w http.ResponseWriter, r *http.Request, status int, message string) {
-	timestamp := time.Now().Format("2006-01-02_15-04-05")
-	errResp := models.HTTPResponse{
-		Timestamp: timestamp,
-		Status:    status,
-		Text:      http.StatusText(status),
-		Message:   message,
-		Path:      r.URL.Path,
-	}
+func WriteJSONResponse(w http.ResponseWriter, statusCode int, res models.HTTPResponse) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(errResp)
+	w.WriteHeader(statusCode)
+
+	res.Timestamp = time.Now().UTC().Format(time.RFC3339)
+
+	json.NewEncoder(w).Encode(res)
+}
+
+func SuccessResponse(w http.ResponseWriter, statusCode int, data any) {
+	WriteJSONResponse(w, statusCode, models.HTTPResponse{
+		Success: true,
+		Data:    data,
+	})
+}
+
+func ErrorResponse(w http.ResponseWriter, statusCode int, err string) {
+	WriteJSONResponse(w, statusCode, models.HTTPResponse{
+		Success: false,
+		Error:   err,
+	})
 }

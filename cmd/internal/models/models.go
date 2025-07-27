@@ -10,7 +10,6 @@ type HTTPConfig struct {
 	Cooldown   float64 `json:"cooldown"`
 }
 
-
 type Config struct {
 	HTTP           HTTPConfig `json:"http"`
 	FileLogging    bool       `json:"fileLogging"`
@@ -18,11 +17,10 @@ type Config struct {
 }
 
 type HTTPResponse struct {
+	Success   bool   `json:"success"`
+	Error     string `json:"error,omitempty"`
 	Timestamp string `json:"timestamp"`
-	Status    int    `json:"status"`
-	Text      string `json:"text"`
-	Message   string `json:"message"`
-	Path      string `json:"path"`
+	Data      any    `json:"data,omitempty"`
 }
 
 type LampState struct {
@@ -37,4 +35,12 @@ type LampUpdateRequest struct {
 
 type ControllerRequests struct {
 	ID int `json:"ID"`
+}
+
+type DeleteData struct {
+	Deleted int `json:"deleted"`
+}
+
+type CreateData struct {
+	Created int `json:"created"`
 }

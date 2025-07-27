@@ -16,7 +16,7 @@ import (
 func RegisterColorRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/colors/{ID}", middleware.WithAdminAuth(getCurrent))
 	mux.HandleFunc("PUT /api/v1/colors/{ID}", middleware.WithAdminAuth(setCurrent))
-//	mux.HandleFunc("WS /api/v1/ws/colors/{ID}", setCurrentWebsocket)
+	// mux.HandleFunc("WS /api/v1/ws/colors/{ID}", setCurrentWebsocket)
 }
 
 func getCurrent(w http.ResponseWriter, r *http.Request) {
@@ -25,23 +25,22 @@ func getCurrent(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("ID")
 	id, err := utils.IDtoInt(idStr)
 	if err != nil {
-		utils.HTTPResponseHandler(w, r, http.StatusBadRequest, err.Error())
+		utils.ErrorResponse(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	
+
 	if !db.ControllerExists(id) {
-		utils.HTTPResponseHandler(w, r, http.StatusBadRequest, "Lamp does not exist")
+		utils.ErrorResponse(w, http.StatusNotFound, "Lamp does not exist")
 		return
 	}
 
 	state, err := db.ViewColor(id)
 	if err != nil {
-		utils.HTTPResponseHandler(w, r, http.StatusBadRequest, err.Error())
+		utils.ErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(state)
+	utils.SuccessResponse(w, http.StatusOK, state)
 }
 
 func setCurrent(w http.ResponseWriter, r *http.Request) {
@@ -50,44 +49,42 @@ func setCurrent(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("ID")
 	id, err := utils.IDtoInt(idStr)
 	if err != nil {
-		utils.HTTPResponseHandler(w, r, http.StatusBadRequest, err.Error())
+		utils.ErrorResponse(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	if !db.ControllerExists(id) {
-		utils.HTTPResponseHandler(w, r, http.StatusBadRequest, "Lamp does not exist")
+		utils.ErrorResponse(w, http.StatusBadRequest, "Lamp does not exist")
 		return
 	}
 
 	currentState, err := db.ViewColor(id)
 	if err != nil {
-		utils.HTTPResponseHandler(w, r, http.StatusInternalServerError, "Failed to get current lamp color")
+		utils.ErrorResponse(w, http.StatusInternalServerError, "Failed to get current lamp color")
 		return
 	}
 
 	if time.Since(currentState.UpdatedAt).Seconds() < config.AppConfig.HTTP.Cooldown {
-		utils.HTTPResponseHandler(w, r, http.StatusTooManyRequests, "Slow down!")
+		utils.ErrorResponse(w, http.StatusTooManyRequests, "Slow down!")
 		return
 	}
 
 	var req models.LampUpdateRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		logger.HTTPLogger.Print(err)
-		utils.HTTPResponseHandler(w, r, http.StatusBadRequest, "Invalid JSON")
+		utils.ErrorResponse(w, http.StatusBadRequest, "Invalid JSON")
 		return
 	}
 
 	err = db.SetColor(id, req.Color)
 	if err != nil {
 		logger.HTTPLogger.Printf("Could not update lamp %d: %s", id, err)
-		utils.HTTPResponseHandler(w, r, http.StatusInternalServerError, err.Error())
+		utils.ErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	updatedState := currentState
 	updatedState.Color = req.Color
 	updatedState.UpdatedAt = time.Now()
+	utils.SuccessResponse(w, http.StatusOK, updatedState)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(updatedState)
-	logger.HTTPLogger.Printf("Lamp %d updated to color %s", id, req.Color)
 }
