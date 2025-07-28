@@ -1,4 +1,4 @@
 logs
-build
+bin
 *.sql
 config.json

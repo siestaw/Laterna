@@ -27,11 +27,11 @@ You can leave the json as it is or configure it to your liking, although some co
 
 Make sure that go is installed. The server was tested with go 1.24.5 on linux.
 
-`$ go run ./cmd/server`
-
-or use the makefile:
-
+run using the makefile
 `$ make run`
+
+for further makefile usage, see
+`$ make help`
 
 ## 🛜 API Documentation
 

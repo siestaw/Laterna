@@ -1,19 +1,27 @@
-MAIN_PKG=./cmd/server
-
+MAIN_PKG :=./cmd/server
 BIN_NAME ?= laterna
-BIN_DIR=build
+BIN_DIR := bin
+CONFIG_FILE := config.json
 
+.DEFAULT_GOAL := build
 
 build:
-	@mkdir -p ${BIN_DIR}
-	@echo "🔧 Building binary using the standard go compiler..."
-	cp config.json build
-	go build -o $(BIN_DIR)/$(BIN_NAME) $(MAIN_PKG)
+	@mkdir -p $(BIN_DIR)
+	@echo "🔧 Building binary..."
+	@cp $(CONFIG_FILE) $(BIN_DIR)/
+	@go build -o $(BIN_DIR)/$(BIN_NAME) $(MAIN_PKG)
 	@echo "✅ Build complete: $(BIN_DIR)/$(BIN_NAME)"
 	
 run:
-	go run ./cmd/server/
+	@echo "🚀 Running server..."
+	@go run $(MAIN_PKG)
 clean:
-	rm -rf ${BIN_DIR}
-	rm -rf logs/
-	go mod tidy	
+	@echo "🧹 Cleaning up..."
+	@rm -rf $(BIN_DIR) logs/
+	@go mod tidy	
+help:
+	@echo "Makefile targets:"
+	@echo "  build     – Build the binary"
+	@echo "  run       – Run the development server"
+	@echo "  clean     – Remove build artifacts and tidy modules"
+	@echo "  help      – Show this help message"
