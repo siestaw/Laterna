@@ -53,6 +53,7 @@ func WriteJSONResponse(w http.ResponseWriter, statusCode int, res models.HTTPRes
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
+	res.Status = statusCode
 	res.Timestamp = time.Now().UTC().Format(time.RFC3339)
 
 	json.NewEncoder(w).Encode(res)

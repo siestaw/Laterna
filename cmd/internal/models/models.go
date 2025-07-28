@@ -17,6 +17,7 @@ type Config struct {
 }
 
 type HTTPResponse struct {
+	Status    int    `json:"status"`
 	Success   bool   `json:"success"`
 	Error     string `json:"error,omitempty"`
 	Timestamp string `json:"timestamp"`
