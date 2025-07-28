@@ -62,10 +62,10 @@ The token is shown once on the first startup. To regenerate it, run the server w
 
 #### 🎛️ Controllers
 
-| Method | Route          | Description                   | Request Body  |
-| ------ | -------------- | ----------------------------- | ------------- |
-| POST   | `/controllers` | Create a new controller       | —             |
-| DELETE | `/controllers` | Delete an existing controller | `{ "ID": 1 }` |
+| Method | Route          | Description                   |
+| ------ | -------------- | ----------------------------- |
+| POST   | `/controllers` | Create a new controller       |
+| DELETE | `/controllers` | Delete an existing controller |
 
 <details> <summary>🔧 Example Payload</summary>
 
@@ -80,11 +80,11 @@ The token is shown once on the first startup. To regenerate it, run the server w
 
 #### 🎨 Colors
 
-| Method | Route          | Description                                        | Request Body             |
-| ------ | -------------- | -------------------------------------------------- | ------------------------ |
-| GET    | `/colors/`     | Get the current color of all available controllers | —                        |
-| GET    | `/colors/{id}` | Get the current color of a specific controller     | —                        |
-| PUT    | `/colors/{id}` | Set the color of a controller                      | `{ "color": "#FF0000" }` |
+| Method | Route          | Description                                        |
+| ------ | -------------- | -------------------------------------------------- |
+| GET    | `/colors/`     | Get the current color of all available controllers |
+| GET    | `/colors/{id}` | Get the current color of a specific controller     |
+| PUT    | `/colors/{id}` | Set the color of a controller                      |
 
 <details> <summary>🔧 Example Payload</summary>
 
