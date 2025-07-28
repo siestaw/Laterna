@@ -85,8 +85,7 @@ $ curl -X POST http://your-server.com/api/v1/controllers \
        -H "Authorization: $TOKEN"
 ```
 
-> [!TIP]
-> Response with the newly assigned ID. The ID will always be the next available one
+ℹ️ Response with the newly assigned ID. The ID will always be the next available one
 
 #### Delete a controller
 
