@@ -1,12 +1,13 @@
 # 🛋️ Laterna (Server)
 
-Laterna is a lightweight REST api for sharing HEX color codes between 2 (or more) lamps with simple HTTP requests, written in go.
+**Laterna** is a lightweight REST API for sharing HEX color codes between 2 (or more) lamps, written in go.
 
 > [!NOTE]
 > This project was developed with my own use case in mind.
-> Expect bugs and weird annoyances/limitations, as this is my first REST api and my first time using go
+> This is my first time building a REST API and my first time utilizing the go language.
+> Expect bugs and weird annoyances/limitations
 
-## Setup
+## ⚙️ Setup
 
 ### 1. Clone the repository
 
@@ -17,56 +18,67 @@ cd laterna
 
 ### 2. Configure the server
 
-Laterna requires a config.json in it's root directory. An [example config](https://github.com/siestaw/Laterna/blob/main/config.json.example) is provided
+Laterna requires a config.json file in the root directory. A [example config](https://github.com/siestaw/Laterna/blob/main/config.json.example) is provided
 
-`$ mv config.json.example config.json`
+```sh
+cp config.json.example config.json
+```
 
 You can leave the json as it is or configure it to your liking, although some configuration options (e.g. `verboseLogging`) aren't fully implemented yet.
 
 ### 3. Run
 
-Make sure that go is installed. The server was tested with go 1.24.5 on linux.
+Make sure that go is installed (tested with Go 1.24.5 on Linux)
 
-run using the makefile
-`$ make run`
+```sh
+make run
+```
 
-for further makefile usage, see
-`$ make help`
+For advanced Makefile options:
+
+```sh
+make help
+```
 
 ## 🛜 API Documentation
 
-<details><summary>Docs</summary>
+### 🔑 Authentication
 
-### Base URL
-
-`http://your-server.com/api/v1`
-
----
-
-### Authentification
-
-The admin token will be displayed once while starting for the first time. To generate a new one, run with the `--resetAdminToken` flag.
-
-All endpoints require the admin token in the header of the request:
+All requests require the **admin token** via the Authorization header:
 
 ```
 Authorization: <token>
 ```
 
+The token is shown once on the first startup. To regenerate it, run the server with:
+
+```sh
+./laterna --resetAdminToken
+```
+
 ---
 
-### Routes
+### 📦️ Endpoints
 
-#### Controller
+#### 🎛️ Controllers
 
 | Method | Route          | Description                   | Request Body  |
 | ------ | -------------- | ----------------------------- | ------------- |
 | POST   | `/controllers` | Create a new controller       | —             |
 | DELETE | `/controllers` | Delete an existing controller | `{ "ID": 1 }` |
 
----
+<details> <summary>🔧 Example Payload</summary>
 
-#### Colors
+```jsonc
+// DELETE /controllers
+{
+    "ID": 1
+}
+```
+
+</details>
+
+#### 🎨 Colors
 
 | Method | Route          | Description                                        | Request Body             |
 | ------ | -------------- | -------------------------------------------------- | ------------------------ |
@@ -74,9 +86,20 @@ Authorization: <token>
 | GET    | `/colors/{id}` | Get the current color of a specific controller     | —                        |
 | PUT    | `/colors/{id}` | Set the color of a controller                      | `{ "color": "#FF0000" }` |
 
+<details> <summary>🔧 Example Payload</summary>
+
+```jsonc
+// PUT /colors/1
+{
+    "Color": "#5398B7"
+}
+```
+
+</details>
+
 ---
 
-### cURL examples
+### 📥️ cURL examples
 
 #### Create a new controller
 
@@ -84,8 +107,6 @@ Authorization: <token>
 $ curl -X POST http://your-server.com/api/v1/controllers \
        -H "Authorization: $TOKEN"
 ```
-
-ℹ️ Response with the newly assigned ID. The ID will always be the next available one
 
 #### Delete a controller
 
@@ -95,21 +116,21 @@ $ curl -X DELETE localhost:8080/api/v1/controllers \
        -d '{"ID": 1}'
 ```
 
-#### Get the current color of all controllers
+#### Get every controllers colors
 
 ```bash
 $ curl -X GET localhost:8080/api/v1/colors/ \
        -H "Authorization: $TOKEN"
 ```
 
-#### Get the current color of a specific controller
+#### Get a specific controllers's color
 
 ```bash
 $ curl -X GET localhost:8080/api/v1/colors/1 \
        -H "Authorization: $TOKEN"
 ```
 
-#### Set the color of a controller
+#### Set a controller's color
 
 ```bash
 $ curl -X PUT localhost:8080/api/v1/colors/1 \
@@ -117,4 +138,32 @@ $ curl -X PUT localhost:8080/api/v1/colors/1 \
        -d '{"Color": "#C2C342"}'
 ```
 
-</details>
+---
+
+### 📤️ Response Format
+
+All responses follow this format:
+
+```json
+{
+    "data": {
+        "color": "#C16A31",
+        "id": 1,
+        "updated_at": "2025-07-28T19:47:46Z"
+    },
+    "status": 200,
+    "success": true,
+    "timestamp": "2025-07-28T20:40:58Z"
+}
+```
+
+In case of an error:
+
+```json
+{
+    "error": "Invalid token",
+    "status": 401,
+    "success": false,
+    "timestamp": "2025-07-28T20:41:54Z"
+}
+```
