@@ -74,9 +74,6 @@ Authorization: <token>
 | GET    | `/colors/{id}` | Get the current color of a specific controller     | —                        |
 | PUT    | `/colors/{id}` | Set the color of a controller                      | `{ "color": "#FF0000" }` |
 
-> [!INFO]
-> Every specified ID has to be greater than 0
-
 ---
 
 ### cURL examples
@@ -88,7 +85,7 @@ $ curl -X POST http://your-server.com/api/v1/controllers \
        -H "Authorization: $TOKEN"
 ```
 
-> [!INFO]
+> [!TIP]
 > Response with the newly assigned ID. The ID will always be the next available one
 
 #### Delete a controller
