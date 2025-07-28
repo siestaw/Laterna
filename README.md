@@ -1,12 +1,37 @@
 # 🛋️ Laterna (Server)
 
+Laterna is an lightweight REST api for sharing HEX color codes between 2 (or more) lamps with simple HTTP requests, written in go.
+
+> [!NOTE]
+> This project was developed with my own use case in mind.
+> This is also my first REST api and my first project in go, so expect bugs and weird annoyances/limitations.
+
 ## 🏵️ Setup
+
+### 1. Clone the repository
+
+```sh
+git clone https://github.com/siestaw/laterna.git
+cd laterna
+```
+
+### 2. Configure the server
 
 Laterna requires a config.json in it's root directory. An [example config](https://github.com/siestaw/Laterna/blob/main/config.json.example) is provided
 
 `$ mv config.json.example config.json`
 
 You can leave the json as it is or configure it to your liking, although some configuration options (e.g. `verboseLogging`) aren't fully implemented yet.
+
+### 3. Run
+
+Make sure that go is installed. The server was tested with go 1.24.5 on linux.
+
+`$ go run ./cmd/server`
+
+or use the makefile:
+
+`$ make run`
 
 ## 🛜 API Documentation
 
