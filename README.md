@@ -104,7 +104,7 @@ The token is shown once on the first startup. To regenerate it, run the server w
 #### Create a new controller
 
 ```bash
-$ curl -X POST http://your-server.com/api/v1/controllers \
+$ curl -X POST localhost:8080/api/v1/controllers \
        -H "Authorization: $TOKEN"
 ```
 
