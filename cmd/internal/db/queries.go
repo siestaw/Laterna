@@ -15,7 +15,7 @@ func CreateController() (int64, error) {
 		logger.DBLogger.Printf("Error creating controller: %v", err)
 		return 0, err
 	}
-	
+
 	id, err := result.LastInsertId()
 	if err != nil {
 		logger.DBLogger.Printf("Error fetching controller ID: %v", err)
@@ -68,6 +68,25 @@ func ControllerExists(id int) bool {
 		logger.DBLogger.Printf("ControllerExists: %v", err)
 	}
 	return count > 0
+}
+
+func GetAllColors() ([]models.LampState, error) {
+	rows, err := DB.Query("SELECT id, color, updated_at FROM controllers WHERE id > 0")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var controllers []models.LampState
+
+	for rows.Next() {
+		var state models.LampState
+		if err := rows.Scan(&state.ID, &state.Color, &state.UpdatedAt); err != nil {
+			return nil, err
+		}
+		controllers = append(controllers, state)
+	}
+	return controllers, nil
 }
 
 func ViewColor(id int) (*models.LampState, error) {

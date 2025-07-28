@@ -66,10 +66,11 @@ Authorization: <token>
 
 #### Colors
 
-| Method | Route          | Description                           | Request Body             |
-| ------ | -------------- | ------------------------------------- | ------------------------ |
-| GET    | `/colors/{id}` | Get the current color of a controller | —                        |
-| PUT    | `/colors/{id}` | Set the color of a controller         | `{ "color": "#FF0000" }` |
+| Method | Route          | Description                                        | Request Body             |
+| ------ | -------------- | -------------------------------------------------- | ------------------------ |
+| GET    | `/colors/`     | Get the current color of all available controllers | —                        |
+| GET    | `/colors/{id}` | Get the current color of a specific controller     | —                        |
+| PUT    | `/colors/{id}` | Set the color of a controller                      | `{ "color": "#FF0000" }` |
 
 ---
 

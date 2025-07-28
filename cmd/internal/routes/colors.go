@@ -14,9 +14,18 @@ import (
 )
 
 func RegisterColorRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/v1/colors/", middleware.WithAdminAuth(listColors))
 	mux.HandleFunc("GET /api/v1/colors/{ID}", middleware.WithAdminAuth(getCurrent))
 	mux.HandleFunc("PUT /api/v1/colors/{ID}", middleware.WithAdminAuth(setCurrent))
-	// mux.HandleFunc("WS /api/v1/ws/colors/{ID}", setCurrentWebsocket)
+}
+
+func listColors(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	colors, err := db.GetAllColors()
+	if err != nil {
+		utils.ErrorResponse(w, http.StatusInternalServerError, err.Error())
+	}
+	utils.SuccessResponse(w, http.StatusOK, colors)
 }
 
 func getCurrent(w http.ResponseWriter, r *http.Request) {
