@@ -8,12 +8,14 @@ import (
 	"github.com/siestaw/laterna/server/cmd/internal/db"
 	"github.com/siestaw/laterna/server/cmd/internal/logger"
 	"github.com/siestaw/laterna/server/cmd/internal/routes"
+	"github.com/siestaw/laterna/server/cmd/utils"
 )
 
 func StartHTTPServer() {
 	router := http.NewServeMux()
 	routes.RegisterColorRoutes(router)
 	routes.RegisterControllerRoutes(router)
+	router.HandleFunc("/", notFoundHandler)
 
 	if !db.ControllerExists(0) {
 		adminToken := db.CreateAdmin()
@@ -28,4 +30,8 @@ func StartHTTPServer() {
 	port := config.AppConfig.HTTP.Port
 	logger.HTTPLogger.Printf("HTTP Server running on :%v", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
+}
+
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	utils.ErrorResponse(w, http.StatusNotFound, "Not found")
 }
