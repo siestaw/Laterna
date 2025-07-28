@@ -1,12 +1,12 @@
 # 🛋️ Laterna (Server)
 
-Laterna is an lightweight REST api for sharing HEX color codes between 2 (or more) lamps with simple HTTP requests, written in go.
+Laterna is a lightweight REST api for sharing HEX color codes between 2 (or more) lamps with simple HTTP requests, written in go.
 
 > [!NOTE]
 > This project was developed with my own use case in mind.
-> This is also my first REST api and my first project in go, so expect bugs and weird annoyances/limitations.
+> Expect bugs and weird annoyances/limitations, as this is my first REST api and my first time using go
 
-## 🏵️ Setup
+## Setup
 
 ### 1. Clone the repository
 
@@ -34,6 +34,8 @@ or use the makefile:
 `$ make run`
 
 ## 🛜 API Documentation
+
+<details><summary>Docs</summary>
 
 ### Base URL
 
@@ -72,6 +74,9 @@ Authorization: <token>
 | GET    | `/colors/{id}` | Get the current color of a specific controller     | —                        |
 | PUT    | `/colors/{id}` | Set the color of a controller                      | `{ "color": "#FF0000" }` |
 
+> [!INFO]
+> Every specified ID has to be greater than 0
+
 ---
 
 ### cURL examples
@@ -83,7 +88,8 @@ $ curl -X POST http://your-server.com/api/v1/controllers \
        -H "Authorization: $TOKEN"
 ```
 
-ℹ️ Response with the newly assigned ID. The ID will always be the next available one
+> [!INFO]
+> Response with the newly assigned ID. The ID will always be the next available one
 
 #### Delete a controller
 
@@ -93,7 +99,14 @@ $ curl -X DELETE localhost:8080/api/v1/controllers \
        -d '{"ID": 1}'
 ```
 
-#### Get the current color of a controller
+#### Get the current color of all controllers
+
+```bash
+$ curl -X GET localhost:8080/api/v1/colors/ \
+       -H "Authorization: $TOKEN"
+```
+
+#### Get the current color of a specific controller
 
 ```bash
 $ curl -X GET localhost:8080/api/v1/colors/1 \
@@ -107,3 +120,5 @@ $ curl -X PUT localhost:8080/api/v1/colors/1 \
        -H "Authorization:$TOKEN" \
        -d '{"Color": "#C2C342"}'
 ```
+
+</details>
