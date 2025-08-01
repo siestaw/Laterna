@@ -1,6 +1,6 @@
 # 🛋️ Laterna (Server)
 
-**Laterna** is a lightweight REST API for sharing HEX color codes between 2 (or more) lamps, written in go.
+**Laterna** is a simple and lightweight REST API for viewing and setting HEX color codes over the web, written in go.
 
 > [!NOTE]
 > This project was developed with my own use case in mind.
