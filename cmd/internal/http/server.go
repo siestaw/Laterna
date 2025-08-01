@@ -28,12 +28,11 @@ func StartHTTPServer() {
 	}
 
 	port := config.AppConfig.HTTP.Port
+	logger.HTTPLogger.Printf("Starting HTTP Server on :%v", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 	if err != nil {
 		logger.HTTPLogger.Fatalf("Failed to start HTTP server: %v", err)
 	}
-	logger.HTTPLogger.Printf("HTTP Server running on :%v", port)
-
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
