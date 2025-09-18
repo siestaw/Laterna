@@ -104,7 +104,7 @@ func ViewColor(id int) (*models.LampState, error) {
 
 func SetColor(id int, color string) error {
 	if !utils.IsValidHexColor(color) {
-		return errors.New("invalid HEX Code: %s")
+		return errors.New("invalid HEX Code")
 	}
 	currentColor, err := ViewColor(id)
 	if err != nil {

@@ -26,7 +26,7 @@ func IDtoInt(id string) (int, error) {
 }
 
 func IsValidHexColor(color string) bool {
-	pattern := `^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
+	pattern := `^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$`
 	match, _ := regexp.MatchString(pattern, color)
 	return match
 }
