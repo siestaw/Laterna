@@ -74,44 +74,64 @@ The token is shown once on the first startup. To regenerate it, run the server w
 
 #### 🎛️ Controllers
 
-| Method | Route          | Description                   |
-| ------ | -------------- | ----------------------------- |
-| POST   | `/controllers` | Create a new controller       |
-| DELETE | `/controllers` | Delete an existing controller |
+| Method | Route          | Description                   | Payload             |
+|--------|----------------|-------------------------------|---------------------|
+| POST   | `/controllers` | Create a new controller       |                     |
+| DELETE | `/controllers` | Delete an existing controller |{ "ID": 1}           |
 
-<details> <summary>🔧 Example Payload</summary>
-
-```jsonc
-// DELETE /controllers
-{
-    "ID": 1
-}
-```
 
 </details>
 
 #### 🎨 Colors
 
-| Method | Route          | Description                                        |
-| ------ | -------------- | -------------------------------------------------- |
-| GET    | `/colors/`     | Get the current color of all available controllers |
-| GET    | `/colors/{id}` | Get the current color of a specific controller     |
-| PUT    | `/colors/{id}` | Set the color of a controller                      |
-
-<details> <summary>🔧 Example Payload</summary>
-
-```jsonc
-// PUT /colors/1
-{
-    "Color": "#5398B7"
-}
-```
-
-</details>
+| Method | Route          | Description                                        | Payload              |
+|--------|----------------|----------------------------------------------------|----------------------|
+| GET    | `/colors/`     | Get the current color of all available controllers |                      |
+| GET    | `/colors/{id}` | Get the current color of a specific controller     |                      |
+| PUT    | `/colors/{id}` | Set the color of a controller                      | { "Color": "#FFFFFF} |
 
 ---
 
-### 📥️ cURL examples
+### Request examples
+<details> <summary>📥️ HTTPie examples</summary>
+
+
+#### Create a new controller
+
+```bash
+$ http POST localhost:8080/api/v1/controllers "Authorization: $TOKEN"
+``` 
+
+#### Delete a controller
+
+```bash
+$ http DELETE localhost:8080/api/v1/controllers "Authorization: $TOKEN" ID:=1
+```
+
+#### Get every controllers colors
+
+```bash
+$ http GET localhost:8080/api/v1/colors/ "Authorization: $TOKEN"
+```
+
+#### Get a specific controllers's color
+
+```bash
+$ http GET localhost:8080/api/v1/colors/1 "Authorization: $TOKEN"
+```
+
+#### Set a controller's color
+
+```bash
+$ http PUT localhost:8080/api/v1/colors/1 "Authorization: $TOKEN" Color="#C2C342"
+```
+
+
+</details>
+
+
+<details> <summary>📥️ cURL examples</summary>
+
 
 #### Create a new controller
 
@@ -149,6 +169,9 @@ $ curl -X PUT localhost:8080/api/v1/colors/1 \
        -H "Authorization:$TOKEN" \
        -d '{"Color": "#C2C342"}'
 ```
+
+
+</details>
 
 ---
 
