@@ -26,12 +26,24 @@ cp config.json.example config.json
 
 You can leave the json as it is or configure it to your liking, although some configuration options (e.g. `verboseLogging`) aren't fully implemented yet.
 
+Make sure that your firewall supports connections to the configured port for laterna (default: `8080`), otherwise clients won't be able to connect to the API. You can do so by using ufw on most linux distributions
+
+```sh
+sudo ufw allow 8080/tcp
+sudo ufw reload
+```
+
+Of course, you'll have to change `8080` to your desired port if configured otherwise
+
+
 ### 3. Run
 
 Make sure that go is installed (tested with Go 1.24.5 on Linux)
 
 ```sh
 make run
+# OR
+go run ./cmd/server/
 ```
 
 For advanced Makefile options:
